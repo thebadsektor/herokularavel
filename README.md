@@ -8,8 +8,37 @@
 </p>
 
 ## Instructions
-<app key>
-
+Generate and display fresh app key:
+```
+php artisan key:generate --show
+```
+Add Config Var to Heroku. App Key and set database to Postgres
+```
+heroku config:set APP_KEY={Your copied key}
+heroku config:set DATABASE_CONNECTION=pgsql
+```
+Install Postgres SQL Free Tier:
+```
+heroku addons:create heroku-postgresql:hobby-dev
+```
+Edit `database.php`. Add line before the `return` keyword:
+```
+$DATABASE_URL=parse_url('Database URL')
+```
+Modify the `pgsql` configuration:
+```
+'pgsql' => [
+            'driver' => 'pgsql',
+            'host' => $DATABASE_URL["host"],
+            'port' => $DATABASE_URL["port"],
+            'database' => ltrim($DATABASE_URL["path"], "/"),
+            'username' => $DATABASE_URL["user"],
+            'password' => $DATABASE_URL["pass"],
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'require',
+```
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
