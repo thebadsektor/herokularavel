@@ -7,9 +7,6 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## Instructions
-<app key>
-
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
@@ -23,6 +20,71 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
+
+**Heroku Laravel Template**<br>
+by Gerald M. Villaran<br>
+<br>
+MySQL in local | Postgres in live
+
+## Instructions
+**Part 1: Clone and Test Locally**<br>
+Clone repo:
+```
+git clone https://github.com/thebadsektor/herokularavel.git
+cd herokularavel
+```
+
+Install Composer:
+```
+composer install
+```
+Generate and display fresh app key:
+```
+php artisan key:generate --show
+```
+Create `.env`
+```
+copy .env.example .env
+```
+Run MySQL, create database and update .env
+Run migration:
+```
+php artisan migrate
+```
+Run to local server:
+```
+php artisan serve
+```
+**Part 2: Deploy to Heroku**<br>
+Create Heroku app and connect to your github repo<br>
+Add Config Var to Heroku. App Key and set database to Postgres<br>
+```
+heroku config:set APP_KEY={Your copied key}
+heroku config:set DATABASE_CONNECTION=pgsql
+```
+Install Postgres SQL Free Tier:
+```
+heroku addons:create heroku-postgresql:hobby-dev
+```
+Edit `database.php`. Add line before the `return` keyword:
+```
+$DATABASE_URL=parse_url('Database URL')
+```
+Modify the `pgsql` configuration:
+```
+'pgsql' => [
+            'driver' => 'pgsql',
+            'host' => $DATABASE_URL["host"],
+            'port' => $DATABASE_URL["port"],
+            'database' => ltrim($DATABASE_URL["path"], "/"),
+            'username' => $DATABASE_URL["user"],
+            'password' => $DATABASE_URL["pass"],
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'require',
+```
+
 
 ## Learning Laravel
 
